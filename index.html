@@ -1,1 +1,520 @@
-empty
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Markets — Service Amenities</title>
+  <meta name="description" content="Service Amenities sets up fully stocked mini markets with self-checkout iPad kiosks in your building. No cost, no staff required.">
+
+  <script>
+    if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+    else document.documentElement.classList.remove('dark');
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: { button: '#2563eb' },
+        },
+      },
+    };
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    .hero-title-sans { font-family: 'Syne', sans-serif; font-weight: 800; }
+    .hero-title-serif { font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-weight: 700; }
+
+    .hero-word {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(36px);
+      animation: wordUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    @keyframes wordUp { to { opacity: 1; transform: translateY(0); } }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+    .badge-slide {
+      opacity: 0;
+      transform: translateY(-12px);
+      animation: badgeIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    @keyframes badgeIn { to { opacity: 1; transform: translateY(0); } }
+
+    .scroll-fade { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+    .scroll-fade.visible { opacity: 1; transform: none; }
+
+    .dark-toggle { transition: background 0.2s, transform 0.2s; }
+    .dark-toggle:hover { transform: scale(1.08); }
+
+    .ipad-shadow { box-shadow: 0 0 0 1px #d1d5db, 0 24px 64px rgba(0,0,0,.13); }
+    .dark .ipad-shadow { box-shadow: 0 0 0 1px #374151, 0 24px 64px rgba(0,0,0,.55); }
+  </style>
+</head>
+
+<body class="bg-white dark:bg-gray-950 overflow-x-hidden transition-colors duration-300">
+
+<!-- NAV -->
+<nav class="sticky top-0 z-50 bg-white/90 dark:bg-gray-950/90 backdrop-blur border-b border-gray-200 dark:border-gray-800 transition-colors duration-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-20">
+    <div class="flex items-center justify-between h-16 gap-4">
+      <a href="./index.html" class="text-sm sm:text-base lg:text-lg font-bold text-gray-800 dark:text-white truncate shrink-0">
+        Miami Service Amenities
+      </a>
+      <div class="hidden md:flex items-center gap-5 lg:gap-8 shrink-0">
+        <a href="#how" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white text-sm transition-colors whitespace-nowrap">How It Works</a>
+        <a href="#setup" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white text-sm transition-colors whitespace-nowrap">Setup</a>
+        <a href="#checkout" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white text-sm transition-colors whitespace-nowrap">Self-Checkout</a>
+        <a href="#faq" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white text-sm transition-colors whitespace-nowrap">FAQ</a>
+        <button id="darkToggleDesktop" class="dark-toggle p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700" aria-label="Toggle dark mode">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+          <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
+        </button>
+        <a href="./form.html" class="flex items-center gap-2 bg-button text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition shadow-md text-sm font-semibold whitespace-nowrap">
+          <i data-lucide="store" class="w-4 h-4 shrink-0"></i>
+          Request a Market
+        </a>
+      </div>
+      <div class="flex md:hidden items-center gap-2 shrink-0">
+        <button id="darkToggleMobile" class="dark-toggle p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300" aria-label="Toggle dark mode">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+          <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
+        </button>
+        <button id="menuBtn" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white" aria-label="Toggle menu">
+          <i data-lucide="menu" class="w-5 h-5 block" id="menuIcon"></i>
+          <i data-lucide="x" class="w-5 h-5 hidden" id="closeIcon"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="mobileMenu" class="hidden md:hidden border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
+    <div class="px-6 py-5 space-y-3 text-center">
+      <a href="#how" class="block text-gray-700 dark:text-gray-300 py-1.5 text-sm">How It Works</a>
+      <a href="#setup" class="block text-gray-700 dark:text-gray-300 py-1.5 text-sm">Setup</a>
+      <a href="#checkout" class="block text-gray-700 dark:text-gray-300 py-1.5 text-sm">Self-Checkout</a>
+      <a href="#faq" class="block text-gray-700 dark:text-gray-300 py-1.5 text-sm">FAQ</a>
+      <a href="./form.html" class="flex items-center justify-center gap-2 bg-button text-white px-6 py-3 rounded-xl shadow-md font-semibold text-sm mt-2">
+        <i data-lucide="store" class="w-4 h-4"></i>
+        Request a Market
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="py-16 md:py-24 overflow-hidden">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 flex flex-col items-center text-center">
+
+    <div class="badge-slide inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-400 text-xs font-semibold px-4 py-1.5 rounded-full mb-8">
+      <span class="w-2 h-2 bg-blue-500 rounded-full inline-block animate-pulse"></span>
+      Mini Markets · Miami, FL
+    </div>
+
+    <h1 class="mb-5 leading-[1.08]" style="font-size: clamp(2.2rem, 6vw, 4.8rem);">
+      <span class="hero-title-sans text-gray-900 dark:text-white">
+        <span class="hero-word" style="animation-delay:0.2s">A&nbsp;full&nbsp;</span>
+        <span class="hero-word" style="animation-delay:0.32s">market.</span>
+      </span>
+      <span class="block hero-title-serif text-button" style="font-size: clamp(2.4rem, 6.5vw, 5.2rem);">
+        <span class="hero-word" style="animation-delay:0.46s">Zero&nbsp;</span>
+        <span class="hero-word" style="animation-delay:0.58s">staff.</span>
+      </span>
+    </h1>
+
+    <p class="fade-up text-gray-500 dark:text-gray-400 text-base sm:text-lg mb-8 max-w-md" style="animation-delay:0.7s">
+      We set up stocked shelves and self-checkout iPad kiosks in your building. No cost, no staff, no work on your end.
+    </p>
+
+    <div class="fade-up flex flex-col sm:flex-row gap-3 justify-center w-full max-w-xs sm:max-w-none" style="animation-delay:0.8s">
+      <a href="./form.html" class="flex items-center justify-center gap-2 bg-button text-white px-7 py-3.5 rounded-xl font-semibold shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all duration-200 text-sm">
+        <i data-lucide="store" class="w-4 h-4 shrink-0"></i>
+        Request a Free Market
+      </a>
+      <a href="#how" class="flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 px-7 py-3.5 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-900 transition text-sm">
+        <i data-lucide="info" class="w-4 h-4 shrink-0"></i>
+        Learn More
+      </a>
+    </div>
+
+    <p class="fade-up flex items-center gap-2 text-gray-400 dark:text-gray-500 text-sm mt-5 mb-14" style="animation-delay:0.85s">
+      <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+      (305) 615-0817
+    </p>
+
+    <!-- STATS -->
+    <div class="fade-up grid grid-cols-3 gap-4 w-full max-w-sm" style="animation-delay:0.95s">
+      <div class="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl px-4 py-5 text-center">
+        <div class="font-extrabold text-gray-900 dark:text-white text-xl leading-tight">48h</div>
+        <div class="text-xs text-gray-400 dark:text-gray-500 mt-1 leading-tight">Avg setup<br>time</div>
+      </div>
+      <div class="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl px-4 py-5 text-center">
+        <div class="font-extrabold text-gray-900 dark:text-white text-xl leading-tight">$0</div>
+        <div class="text-xs text-gray-400 dark:text-gray-500 mt-1 leading-tight">Cost<br>to you</div>
+      </div>
+      <div class="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl px-4 py-5 text-center">
+        <div class="font-extrabold text-gray-900 dark:text-white text-xl leading-tight">24/7</div>
+        <div class="text-xs text-gray-400 dark:text-gray-500 mt-1 leading-tight">Always<br>accessible</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="py-16 md:py-20">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-20">
+    <h2 class="text-2xl sm:text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white scroll-fade">Up and running in days</h2>
+    <div class="grid gap-6 sm:grid-cols-3 text-center scroll-fade">
+      <div class="bg-white dark:bg-gray-900 p-6 sm:p-8 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition border border-gray-100 dark:border-gray-800">
+        <div class="flex justify-center mb-4 text-blue-600 dark:text-blue-400">
+          <i data-lucide="clock" class="w-7 h-7"></i>
+        </div>
+        <div class="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-600 mb-2">Step 01</div>
+        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">Site Assessment</h3>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">We visit your property, measure the space, and plan the optimal layout for your traffic and square footage.</p>
+      </div>
+      <div class="bg-white dark:bg-gray-900 p-6 sm:p-8 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition border border-gray-100 dark:border-gray-800">
+        <div class="flex justify-center mb-4 text-blue-600 dark:text-blue-400">
+          <i data-lucide="monitor-smartphone" class="w-7 h-7"></i>
+        </div>
+        <div class="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-600 mb-2">Step 02</div>
+        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">Shelves and iPad Setup</h3>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">We deliver, assemble, and stock your shelves, then mount and configure the self-checkout iPad kiosks including payment processing.</p>
+      </div>
+      <div class="bg-white dark:bg-gray-900 p-6 sm:p-8 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition border border-gray-100 dark:border-gray-800">
+        <div class="flex justify-center mb-4 text-blue-600 dark:text-blue-400">
+          <i data-lucide="refresh-cw" class="w-7 h-7"></i>
+        </div>
+        <div class="text-xs font-bold uppercase tracking-widest text-gray-400 dark:text-gray-600 mb-2">Step 03</div>
+        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white">We Handle Everything</h3>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">Regular restocking visits, inventory management, and equipment maintenance. You do nothing. We keep it running.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SHELVING -->
+<section id="setup" class="py-16 md:py-20 border-t border-gray-100 dark:border-gray-800">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-20">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <div class="scroll-fade">
+        <p class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400 mb-3">Shelving</p>
+        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">Shelves built for your space</h2>
+        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-7">From a single gondola in a break room to a full aisle layout in a lobby, we customize the configuration to your square footage and expected foot traffic.</p>
+        <div class="space-y-4">
+          <div class="flex items-start gap-3">
+            <div class="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-blue-600 dark:text-blue-400"></i>
+            </div>
+            <div>
+              <div class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-0.5">Modular gondola shelving</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">Standard or custom widths with adjustable heights for any product mix.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-blue-600 dark:text-blue-400"></i>
+            </div>
+            <div>
+              <div class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-0.5">Refrigerated coolers</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">Drinks, dairy, and fresh items available standalone or combined with dry shelves.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-blue-600 dark:text-blue-400"></i>
+            </div>
+            <div>
+              <div class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-0.5">Managed planograms</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">We organize and maintain product layout on every restock visit.</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-blue-600 dark:text-blue-400"></i>
+            </div>
+            <div>
+              <div class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-0.5">Brand-neutral or co-branded</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">Signage can match your property branding or remain completely neutral.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroll-fade grid grid-cols-2 gap-4">
+        <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-5 shadow-md hover:shadow-xl hover:-translate-y-1 transition">
+          <div class="text-blue-600 dark:text-blue-400 mb-3"><i data-lucide="layers" class="w-6 h-6"></i></div>
+          <div class="text-sm font-bold text-gray-900 dark:text-white mb-1">Multi-tier shelving</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400">Configurable for any ceiling height and aisle width.</div>
+        </div>
+        <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-5 shadow-md hover:shadow-xl hover:-translate-y-1 transition">
+          <div class="text-blue-600 dark:text-blue-400 mb-3"><i data-lucide="thermometer" class="w-6 h-6"></i></div>
+          <div class="text-sm font-bold text-gray-900 dark:text-white mb-1">Cold storage</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400">Reach-in coolers for drinks, dairy, and fresh options.</div>
+        </div>
+        <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-5 shadow-md hover:shadow-xl hover:-translate-y-1 transition">
+          <div class="text-blue-600 dark:text-blue-400 mb-3"><i data-lucide="package-open" class="w-6 h-6"></i></div>
+          <div class="text-sm font-bold text-gray-900 dark:text-white mb-1">200+ SKUs</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400">Snacks, beverages, hygiene items, OTC essentials, and more.</div>
+        </div>
+        <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-5 shadow-md hover:shadow-xl hover:-translate-y-1 transition">
+          <div class="text-blue-600 dark:text-blue-400 mb-3"><i data-lucide="truck" class="w-6 h-6"></i></div>
+          <div class="text-sm font-bold text-gray-900 dark:text-white mb-1">Scheduled restocks</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400">2 to 3 visits per week, or daily for high-volume locations.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SELF-CHECKOUT -->
+<section id="checkout" class="py-16 md:py-20 border-t border-gray-100 dark:border-gray-800">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-20">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+
+      <div class="scroll-fade flex justify-center order-2 md:order-1">
+        <div class="relative">
+          <div class="absolute -inset-6 bg-blue-100 dark:bg-blue-900/20 rounded-[3rem] blur-2xl opacity-50 pointer-events-none"></div>
+          <div class="ipad-shadow relative bg-gray-200 dark:bg-gray-700 border-[3px] border-gray-300 dark:border-gray-600 rounded-[2rem] w-56 overflow-hidden" style="aspect-ratio:3/4;">
+            <div class="absolute inset-2 bg-white dark:bg-gray-950 rounded-2xl overflow-hidden flex flex-col">
+              <div class="bg-blue-600 px-4 py-3 flex items-center justify-between">
+                <span class="text-white font-bold text-sm">Self-Checkout</span>
+                <i data-lucide="shopping-bag" class="w-4 h-4 text-white"></i>
+              </div>
+              <div class="flex-1 flex flex-col items-center justify-center px-3 py-3 gap-2.5">
+                <div class="w-20 h-20 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-xl flex flex-col items-center justify-center gap-1.5">
+                  <i data-lucide="scan-line" class="w-6 h-6 text-gray-300 dark:text-gray-600"></i>
+                  <span class="text-xs text-gray-400 dark:text-gray-600">Scan item</span>
+                </div>
+                <div class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl px-3 py-2">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <div class="text-xs font-semibold text-gray-800 dark:text-gray-200">Red Bull 8.4oz</div>
+                      <div class="text-xs text-gray-400">x1</div>
+                    </div>
+                    <span class="text-xs font-bold text-gray-900 dark:text-white">$3.49</span>
+                  </div>
+                </div>
+                <div class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl px-3 py-2">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <div class="text-xs font-semibold text-gray-800 dark:text-gray-200">Kind Bar · Almond</div>
+                      <div class="text-xs text-gray-400">x2</div>
+                    </div>
+                    <span class="text-xs font-bold text-gray-900 dark:text-white">$5.98</span>
+                  </div>
+                </div>
+              </div>
+              <div class="border-t border-gray-100 dark:border-gray-800 px-4 py-3">
+                <div class="flex justify-between text-xs mb-2.5">
+                  <span class="text-gray-400">Total</span>
+                  <span class="font-bold text-gray-900 dark:text-white">$9.47</span>
+                </div>
+                <div class="bg-blue-600 rounded-xl py-2 text-center">
+                  <span class="text-xs font-bold text-white">Tap to Pay</span>
+                </div>
+              </div>
+            </div>
+            <div class="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-8 h-1 bg-gray-400 dark:bg-gray-500 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroll-fade order-1 md:order-2">
+        <p class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400 mb-3">Self-Checkout</p>
+        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">iPad kiosks that just work</h2>
+        <p class="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-7">Square-mounted iPad kiosks handle every transaction. No cashier, no friction. Scan, tap, done in under 30 seconds.</p>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl px-5 py-4 shadow-md">
+            <div class="text-blue-600 dark:text-blue-400 mb-2"><i data-lucide="credit-card" class="w-5 h-5"></i></div>
+            <div class="text-sm font-bold text-gray-900 dark:text-white mb-1">All payment types</div>
+            <div class="text-xs text-gray-500 dark:text-gray-400">Tap, chip, swipe, Apple Pay, and Google Pay.</div>
+          </div>
+          <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl px-5 py-4 shadow-md">
+            <div class="text-blue-600 dark:text-blue-400 mb-2"><i data-lucide="scan-line" class="w-5 h-5"></i></div>
+            <div class="text-sm font-bold text-gray-900 dark:text-white mb-1">Barcode scanning</div>
+            <div class="text-xs text-gray-500 dark:text-gray-400">Built-in camera scanner with no extra hardware needed.</div>
+          </div>
+          <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl px-5 py-4 shadow-md">
+            <div class="text-blue-600 dark:text-blue-400 mb-2"><i data-lucide="bar-chart-2" class="w-5 h-5"></i></div>
+            <div class="text-sm font-bold text-gray-900 dark:text-white mb-1">Live sales data</div>
+            <div class="text-xs text-gray-500 dark:text-gray-400">We track velocity to optimize every restock.</div>
+          </div>
+          <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl px-5 py-4 shadow-md">
+            <div class="text-blue-600 dark:text-blue-400 mb-2"><i data-lucide="shield" class="w-5 h-5"></i></div>
+            <div class="text-sm font-bold text-gray-900 dark:text-white mb-1">Secured mount</div>
+            <div class="text-xs text-gray-500 dark:text-gray-400">Kensington-locked and bolted enclosures.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHERE IT WORKS -->
+<section class="py-16 md:py-20 border-t border-gray-100 dark:border-gray-800">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-20">
+    <h2 class="text-2xl sm:text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white scroll-fade">Works wherever people gather</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 scroll-fade">
+      <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl px-5 py-7 text-center shadow-md hover:shadow-xl hover:-translate-y-1 transition">
+        <div class="flex justify-center mb-3 text-blue-600 dark:text-blue-400"><i data-lucide="building-2" class="w-6 h-6"></i></div>
+        <div class="text-sm font-bold text-gray-900 dark:text-white">Office Buildings</div>
+        <div class="text-xs text-gray-400 dark:text-gray-500 mt-1">50 or more employees</div>
+      </div>
+      <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl px-5 py-7 text-center shadow-md hover:shadow-xl hover:-translate-y-1 transition">
+        <div class="flex justify-center mb-3 text-blue-600 dark:text-blue-400"><i data-lucide="home" class="w-6 h-6"></i></div>
+        <div class="text-sm font-bold text-gray-900 dark:text-white">Apartment Complexes</div>
+        <div class="text-xs text-gray-400 dark:text-gray-500 mt-1">Lobby or amenity floor</div>
+      </div>
+      <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl px-5 py-7 text-center shadow-md hover:shadow-xl hover:-translate-y-1 transition">
+        <div class="flex justify-center mb-3 text-blue-600 dark:text-blue-400"><i data-lucide="hotel" class="w-6 h-6"></i></div>
+        <div class="text-sm font-bold text-gray-900 dark:text-white">Hotels</div>
+        <div class="text-xs text-gray-400 dark:text-gray-500 mt-1">Lobby, gym, or pool area</div>
+      </div>
+      <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl px-5 py-7 text-center shadow-md hover:shadow-xl hover:-translate-y-1 transition">
+        <div class="flex justify-center mb-3 text-blue-600 dark:text-blue-400"><i data-lucide="dumbbell" class="w-6 h-6"></i></div>
+        <div class="text-sm font-bold text-gray-900 dark:text-white">Gyms and Fitness</div>
+        <div class="text-xs text-gray-400 dark:text-gray-500 mt-1">Pre and post-workout essentials</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="py-16 md:py-20">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-20">
+    <h2 class="text-2xl sm:text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white scroll-fade">Frequently Asked Questions</h2>
+    <div class="space-y-4 scroll-fade">
+      <div class="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md border border-gray-100 dark:border-gray-800">
+        <h3 class="font-semibold mb-2 text-gray-900 dark:text-white flex items-center gap-2">
+          <i data-lucide="circle-help" class="w-4 h-4 text-blue-500 shrink-0"></i>
+          What does this cost our property?
+        </h3>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">Nothing. We provide, install, stock, and maintain the market at no cost to you. We generate revenue from product sales and your property is the host.</p>
+      </div>
+      <div class="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md border border-gray-100 dark:border-gray-800">
+        <h3 class="font-semibold mb-2 text-gray-900 dark:text-white flex items-center gap-2">
+          <i data-lucide="circle-help" class="w-4 h-4 text-blue-500 shrink-0"></i>
+          How often do you restock?
+        </h3>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">Restocking frequency is based on your foot traffic. Most locations receive two to three visits per week. High-volume sites can receive daily service.</p>
+      </div>
+      <div class="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md border border-gray-100 dark:border-gray-800">
+        <h3 class="font-semibold mb-2 text-gray-900 dark:text-white flex items-center gap-2">
+          <i data-lucide="circle-help" class="w-4 h-4 text-blue-500 shrink-0"></i>
+          How much space is required?
+        </h3>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">A minimal setup fits in as little as 60 square feet. We have outfitted break rooms, hallway alcoves, and full lobby corridors and adapt to whatever space is available.</p>
+      </div>
+      <div class="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md border border-gray-100 dark:border-gray-800">
+        <h3 class="font-semibold mb-2 text-gray-900 dark:text-white flex items-center gap-2">
+          <i data-lucide="circle-help" class="w-4 h-4 text-blue-500 shrink-0"></i>
+          Can tenants request specific products?
+        </h3>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">Yes. We have a request process and rotate in popular items. Your property manager can also provide us with a preferred product list at the time of setup.</p>
+      </div>
+      <div class="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md border border-gray-100 dark:border-gray-800">
+        <h3 class="font-semibold mb-2 text-gray-900 dark:text-white flex items-center gap-2">
+          <i data-lucide="circle-help" class="w-4 h-4 text-blue-500 shrink-0"></i>
+          What happens if the iPad has an issue?
+        </h3>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">Each kiosk has a QR code sticker that gives shoppers immediate access to the full web version of the store with secure payment processing. This ensures purchases can continue without interruption while we resolve any hardware issue.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="py-16 md:py-20 border-t border-gray-100 dark:border-gray-800">
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 text-center scroll-fade">
+    <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">Ready to add a market?</h2>
+    <p class="text-gray-500 dark:text-gray-400 text-sm mb-8 max-w-md mx-auto">Tell us about your property and we will reach out within one business day to schedule a free site visit.</p>
+    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+      <a href="./form.html" class="flex items-center justify-center gap-2 bg-button text-white px-7 py-3.5 rounded-xl font-semibold shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all duration-200 text-sm">
+        <i data-lucide="store" class="w-4 h-4 shrink-0"></i>
+        Request a Free Market
+      </a>
+      <a href="tel:+13056150817" class="flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 px-7 py-3.5 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-gray-900 transition text-sm">
+        <i data-lucide="phone" class="w-4 h-4 shrink-0"></i>
+        (305) 615-0817
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 py-12">
+  <div class="max-w-6xl mx-auto px-6 sm:px-10 lg:px-20 grid sm:grid-cols-2 md:grid-cols-3 gap-8 text-center sm:text-left">
+    <div>
+      <h3 class="font-bold mb-3 text-gray-900 dark:text-white">Miami Service Amenities</h3>
+      <p class="text-gray-500 dark:text-gray-400 text-sm">Providing free vending machines and mini markets across Miami.</p>
+    </div>
+    <div>
+      <h3 class="font-bold mb-3 text-gray-900 dark:text-white">Contact</h3>
+      <p class="flex items-center justify-center sm:justify-start gap-2 text-gray-500 dark:text-gray-400 text-sm mb-1">
+        <i data-lucide="phone" class="w-3.5 h-3.5 shrink-0"></i>(305) 615-0817
+      </p>
+      <p class="flex items-center justify-center sm:justify-start gap-2 text-gray-500 dark:text-gray-400 text-sm">
+        <i data-lucide="mail" class="w-3.5 h-3.5 shrink-0"></i>service2amenities@gmail.com
+      </p>
+    </div>
+    <div class="sm:col-span-2 md:col-span-1">
+      <h3 class="font-bold mb-3 text-gray-900 dark:text-white">Links</h3>
+      <p class="mb-1"><a href="./index.html" class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors">Vending Machines</a></p>
+      <p class="mb-1"><a href="./how-it-works.html" class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors">How it works</a></p>
+      <p><a href="./gallery.html" class="text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm transition-colors">Gallery</a></p>
+    </div>
+  </div>
+  <div class="text-center text-gray-400 dark:text-gray-600 mt-10 text-xs">
+    © 2026 Miami Service Amenities
+  </div>
+</footer>
+
+<script>
+  lucide.createIcons();
+
+  const html = document.documentElement;
+
+  if (localStorage.getItem('theme') === 'dark') {
+    html.classList.add('dark');
+  } else {
+    html.classList.remove('dark');
+  }
+
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const menuIcon = document.getElementById('menuIcon');
+  const closeIcon = document.getElementById('closeIcon');
+
+  menuBtn.addEventListener('click', () => {
+    const isHidden = mobileMenu.classList.toggle('hidden');
+    menuIcon.classList.toggle('hidden', !isHidden);
+    closeIcon.classList.toggle('hidden', isHidden);
+  });
+
+  function toggleDark() {
+    html.classList.toggle('dark');
+    localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    lucide.createIcons();
+  }
+
+  document.getElementById('darkToggleDesktop').addEventListener('click', toggleDark);
+  document.getElementById('darkToggleMobile').addEventListener('click', toggleDark);
+
+  const scrollObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.scroll-fade').forEach(el => scrollObserver.observe(el));
+</script>
+
+</body>
+</html>
